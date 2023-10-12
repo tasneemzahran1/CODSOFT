@@ -1,0 +1,84 @@
+from tkinter import *
+window = Tk()
+window.title('Contact List')
+window.geometry('600x500+400+175')
+frame1 = Frame(window)
+frame1.pack(side = LEFT)
+frame2 = Frame(window)
+frame2.pack( side = RIGHT )
+frame3 = Frame(window)
+frame3.pack( side = BOTTOM )
+frame4 = Frame(window)
+frame4.pack( side = BOTTOM )
+contactlist = []
+def selected():
+    return int(box.curselection()[0])
+def add():
+    contactlist.append([e1.get(), e2.get(), e3.get(), e4.get()])
+    select_set()
+    clear_entries()
+def view():
+    if len(contactlist) > 0:
+        e1.delete(0, END)
+        e2.delete(0, END)
+        e3.delete(0, END)
+        e4.delete(0, END)
+
+        e1.insert(END, contactlist[selected()][0])
+        e2.insert(END, contactlist[selected()][1])
+        e3.insert(END, contactlist[selected()][2])
+        e4.insert(END, contactlist[selected()][3])
+def search():
+    search=e5.get().lower()
+    for contact in contactlist:
+        if search in contact[0].lower():
+            box.insert(END,contact[0])
+def update():
+    contactlist[selected()] = [e1.get(), e2.get(), e3.get(), e4.get()]
+    select_set()
+def delete():
+    del contactlist[selected()]
+    select_set()
+def select_set():
+    contactlist.sort()
+    box.delete(0, END)
+    for contact in contactlist:
+        box.insert(END, contact[0])
+def clear_entries():
+    e1.delete(0, END)
+    e2.delete(0, END)
+    e3.delete(0, END)
+    e4.delete(0, END)
+l1 = Label(frame1, text="Name", font=("arial", 12, "italic"))
+l1.pack()
+e1 = Entry(frame2, bd=5, width=30)
+e1.pack()
+l2 = Label(frame1, text="Phone no.", font=("arial", 12, "italic"))
+l2.pack()
+e2 = Entry(frame2, bd=5, width=30)
+e2.pack()
+l3 = Label(frame1, text="Email", font=("arial", 12, "italic"))
+l3.pack()
+e3 = Entry(frame2, bd=5, width=30)
+e3.pack()
+l4 = Label(frame1, text="Address", font=("arial", 12, "italic"))
+l4.pack()
+e4 = Entry(frame2, bd=5, width=30)
+e4.pack()
+l5 = Label(frame1, text="Search", font=("arial", 12, "italic"))
+l5.pack()
+e5 = Entry(frame2, bd=5, width=30)
+e5.pack()
+b1 = Button(frame4, text="Add", bg="yellow", command=add)
+b1.pack(side=LEFT)
+b2 = Button(frame4, text="View", bg="yellow", command=view)
+b2.pack(side=LEFT)
+b3 = Button(frame4, text="Update", bg="yellow", command=update)
+b3.pack(side=LEFT)
+b4 = Button(frame4, text="Delete", bg="yellow", command=delete)
+b4.pack(side=RIGHT)
+b5 = Button(frame4, text="search", bg="yellow", command=search)
+b5.pack(side=RIGHT)
+box = Listbox(frame3, font=("arial", 12), width=50,height=8)
+box.pack(pady=5,padx=5)
+window.mainloop()
