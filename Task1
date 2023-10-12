@@ -1,0 +1,79 @@
+import pickle
+import tkinter
+from tkinter import *
+from tkinter import messagebox
+window = Tk()
+window.title('To-Do list')
+window.geometry('600x600+400+175')
+frame1 = Frame(window)
+frame1.pack(side=TOP)
+frame2 = Frame(window)
+frame2.pack()
+frame3 = Frame(window)
+frame3.pack(side=BOTTOM)
+def update():
+    index = box.curselection()
+    if index:
+        new = E1.get()
+        if new:
+            box.delete(index)
+            box.insert(index, new)
+            E1.delete(0, END)
+def add():
+   task = E1.get()
+   if task != "":
+     box.insert(tkinter.END, task)
+   else:
+       messagebox.showerror(title="ERROR", message="Please enter the task")
+def delete():
+    delete = box.curselection()
+    task = box.get(delete)
+    with open("data.txt", "r+") as taskfile:
+       new = taskfile.readlines()
+       taskfile.seek(0)
+       for line in new:
+           item = str(task)
+           if item not in line:
+               taskfile.write(line)
+       taskfile.truncate()
+    box.delete(delete)
+def clear():
+  box.delete(0,'end')
+  output.config(text='')
+def save():
+   saved=box.get(0,box.size())
+   pickle.dump(saved, open('data.txt','wb'))
+def load():
+    tasks=pickle.load(open('data.txt','rb'))
+    for task in tasks:
+        box.insert(END, task)
+L1 = Label(frame1, text="Welcome to your To Do List", font=("arial", 15, "bold"))
+L1.pack()
+l2 = Label(frame1)
+l2.pack()
+l3 = Label(frame1, text="Write your task", font=("arial", 15, "bold"), fg="#fff", bg="hotpink")
+l3.pack()
+E1 = Entry(frame1, bd=5, width=30, font=("arial", 15))
+E1.pack(pady=10, padx=10)
+E1.focus()
+B6 = Button(frame1, text="Save", font=("arial", 10, "bold"), bd=5, command=save)
+B6.pack(side=RIGHT)
+B3 = Button(frame1, text="Add", font=("arial", 10, "bold"), bd=5, command=add)
+B3.pack(side=LEFT)
+B7 = Button(frame1, text="Load", font=("arial", 10, "bold"), bd=5, command=load)
+B7.pack()
+B4 = Button(frame3, text="clear the list", font=("arial", 10, "bold"), bd=5, command=clear)
+B4.pack(side=RIGHT)
+B5 = Button(frame3, text="Update", font=("arial", 10, "bold"), bd=5, command=update)
+B5.pack(side=LEFT)
+B1 = Button(frame3, text="Delete a task", font=("arial", 10, "bold"), bd=5, command=delete)
+B1.pack()
+l5 = Label(window)
+l5.pack()
+l4 = Label(window, text="Your list", font=("arial", 10, "bold"))
+l4.pack()
+box = Listbox(window, font=("arial", 12), height=30, width=30)
+box.pack()
+output = Label(window)
+output.pack()
+window.mainloop()
